@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Benoît J. Dobbelstein — Music Composer</title>
   <meta name="description" content="Benoît J. Dobbelstein — Music composer for film, TV, advertising and corporate communication. dB minor music.">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -639,7 +643,7 @@
       <h2 class="section-title reveal">Contact</h2>
       <div class="contact-grid">
         <div class="contact-form reveal">
-          <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <form id="contact-form" action="https://formspree.io/f/xjglegkj" method="POST">
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" id="name" name="name" required autocomplete="name">
@@ -654,6 +658,13 @@
             </div>
             <button type="submit" class="btn-submit">Send Message</button>
           </form>
+          <div id="form-success" style="display:none; padding:1.5rem; border:1px solid var(--red); background:rgba(192,57,43,0.1); margin-top:1rem;">
+            <p style="font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:0.05em; color:var(--text); margin-bottom:0.5rem;">Message Sent</p>
+            <p style="color:var(--text-dim); font-size:0.95rem;">Thanks for reaching out — I'll get back to you shortly.</p>
+          </div>
+          <div id="form-error" style="display:none; padding:1rem; border:1px solid #888; margin-top:1rem; color:var(--text-dim); font-size:0.9rem;">
+            Something went wrong. Please email <a href="mailto:info@dbminor.com" style="color:var(--red);">info@dbminor.com</a> directly.
+          </div>
         </div>
         <div class="contact-info reveal">
           <h3>Label Contact</h3>
@@ -803,6 +814,37 @@
     }
     document.addEventListener('DOMContentLoaded', function() {
       waitForPlayer();
+
+      // Contact form AJAX submission
+      var form = document.getElementById('contact-form');
+      if (form) {
+        form.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var btn = form.querySelector('button[type="submit"]');
+          var orig = btn.textContent;
+          btn.textContent = 'Sending...';
+          btn.disabled = true;
+          fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: { 'Accept': 'application/json' }
+          }).then(function(res) {
+            if (res.ok) {
+              form.reset();
+              form.style.display = 'none';
+              document.getElementById('form-success').style.display = 'block';
+            } else {
+              document.getElementById('form-error').style.display = 'block';
+              btn.textContent = orig;
+              btn.disabled = false;
+            }
+          }).catch(function() {
+            document.getElementById('form-error').style.display = 'block';
+            btn.textContent = orig;
+            btn.disabled = false;
+          });
+        });
+      }
     });
   </script>
 
